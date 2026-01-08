@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistem Deteksi Penyakit Daun Padi Berbasis AI dengan Rekomendasi Treatment">
+    <meta name="theme-color" content="#2E7D32">
+    
+    <title>🌾 Deteksi Penyakit Padi - AI Decision Support System</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🌾</span>
+                    <div class="logo-text">
+                        <h1>PadiCare AI</h1>
+                        <span class="tagline">Deteksi Penyakit & Rekomendasi Treatment</span>
+                    </div>
+                </div>
+                <nav class="nav">
+                    <a href="#detect" class="nav-link active">
+                        <i class="fas fa-camera"></i> Deteksi
+                    </a>
+                    <a href="#diseases" class="nav-link">
+                        <i class="fas fa-virus"></i> Database Penyakit
+                    </a>
+                    <a href="#about" class="nav-link">
+                        <i class="fas fa-info-circle"></i> Tentang
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h2 class="hero-title">Deteksi Penyakit Daun Padi dengan AI</h2>
+                    <p class="hero-description">
+                        Sistem berbasis Vision Transformer dengan akurasi 98.1% untuk mendeteksi 
+                        5 jenis penyakit padi dan memberikan rekomendasi pengendalian yang tepat.
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-value">98.1%</span>
+                            <span class="stat-label">Akurasi</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">6</span>
+                            <span class="stat-label">Kategori</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">&lt;2s</span>
+                            <span class="stat-label">Response</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detection Section -->
+            <section id="detect" class="section detection-section">
+                <div class="detection-container">
+                    <!-- Upload Area -->
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content" id="uploadContent">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h3>Upload Gambar Daun Padi</h3>
+                            <p>Drag & drop gambar atau klik untuk memilih</p>
+                            <div class="upload-formats">
+                                <span>Format: JPG, PNG, WebP</span>
+                                <span>Max: 10MB</span>
+                            </div>
+                            <input type="file" id="imageInput" accept="image/*" hidden>
+                            <button class="btn btn-primary upload-btn" id="selectBtn">
+                                <i class="fas fa-image"></i> Pilih Gambar
+                            </button>
+                            <button class="btn btn-secondary camera-btn" id="cameraBtn">
+                                <i class="fas fa-camera"></i> Ambil Foto
+                            </button>
+                        </div>
+                        
+                        <!-- Image Preview -->
+                        <div class="preview-content hidden" id="previewContent">
+                            <img id="previewImage" alt="Preview">
+                            <div class="preview-actions">
+                                <button class="btn btn-success" id="analyzeBtn">
+                                    <i class="fas fa-microscope"></i> Analisis Sekarang
+                                </button>
+                                <button class="btn btn-outline" id="resetBtn">
+                                    <i class="fas fa-redo"></i> Ganti Gambar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Loading State -->
+                        <div class="loading-content hidden" id="loadingContent">
+                            <div class="loader"></div>
+                            <p>Menganalisis gambar...</p>
+                            <span class="loading-subtext">Vision Transformer sedang bekerja</span>
+                        </div>
+                    </div>
+
+                    <!-- Results Area -->
+                    <div class="results-area hidden" id="resultsArea">
+                        <!-- Detection Result Card -->
+                        <div class="result-card detection-card" id="detectionCard">
+                            <div class="card-header">
+                                <h3><i class="fas fa-search-plus"></i> Hasil Deteksi</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="detection-result" id="detectionResult">
+                                    <!-- Filled by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Disease Info Card -->
+                        <div class="result-card disease-card" id="diseaseCard">
+                            <div class="card-header">
+                                <h3><i class="fas fa-virus"></i> Informasi Penyakit</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="disease-info" id="diseaseInfo">
+                                    <!-- Filled by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Treatment Recommendations Card -->
+                        <div class="result-card treatment-card" id="treatmentCard">
+                            <div class="card-header">
+                                <h3><i class="fas fa-prescription-bottle-alt"></i> Rekomendasi Treatment</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="treatment-tabs">
+                                    <button class="tab-btn active" data-tab="chemical">
+                                        <i class="fas fa-flask"></i> Kimiawi
+                                    </button>
+                                    <button class="tab-btn" data-tab="biological">
+                                        <i class="fas fa-leaf"></i> Hayati
+                                    </button>
+                                    <button class="tab-btn" data-tab="cultural">
+                                        <i class="fas fa-seedling"></i> Kultur Teknis
+                                    </button>
+                                </div>
+                                <div class="treatment-content" id="treatmentContent">
+                                    <!-- Filled by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Priority Card -->
+                        <div class="result-card priority-card" id="priorityCard">
+                            <div class="card-header">
+                                <h3><i class="fas fa-exclamation-triangle"></i> Prioritas Tindakan</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="priority-content" id="priorityContent">
+                                    <!-- Filled by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- New Analysis Button -->
+                        <button class="btn btn-primary btn-block" id="newAnalysisBtn">
+                            <i class="fas fa-plus"></i> Analisis Baru
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Disease Database Section -->
+            <section id="diseases" class="section diseases-section">
+                <h2 class="section-title">
+                    <i class="fas fa-database"></i> Database Penyakit Padi
+                </h2>
+                <div class="disease-grid" id="diseaseGrid">
+                    <!-- Disease Cards - Generated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="section about-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i> Tentang Sistem
+                </h2>
+                <div class="about-grid">
+                    <div class="about-card">
+                        <div class="about-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Vision Transformer</h3>
+                        <p>Model AI terbaru dengan mekanisme self-attention untuk analisis gambar yang akurat.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <h3>Cloud-Based</h3>
+                        <p>Inferensi di cloud dengan Roboflow API untuk performa tinggi tanpa instalasi.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Decision Support</h3>
+                        <p>Rekomendasi treatment berbasis knowledge base dari IRRI dan literatur pertanian.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Responsive</h3>
+                        <p>Akses dari perangkat apa saja - smartphone, tablet, atau desktop.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <p>🌾 PadiCare AI - Sistem Deteksi Penyakit Daun Padi</p>
+                    <p>Dikembangkan untuk Penelitian Skripsi</p>
+                    <p>Universitas Pendidikan Indonesia © 2026</p>
+                </div>
+                <div class="footer-tech">
+                    <span class="tech-badge">Vision Transformer</span>
+                    <span class="tech-badge">Roboflow</span>
+                    <span class="tech-badge">Flask</span>
+                    <span class="tech-badge">Web IoT</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Camera Modal -->
+    <div class="modal hidden" id="cameraModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-camera"></i> Ambil Foto</h3>
+                <button class="modal-close" id="closeCameraModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <video id="cameraVideo" autoplay playsinline></video>
+                <canvas id="cameraCanvas" hidden></canvas>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="captureBtn">
+                    <i class="fas fa-camera"></i> Ambil Foto
+                </button>
+                <button class="btn btn-outline" id="cancelCameraBtn">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disease Detail Modal -->
+    <div class="modal hidden" id="diseaseModal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 id="diseaseModalTitle">Detail Penyakit</h3>
+                <button class="modal-close" id="closeDiseaseModal">&times;</button>
+            </div>
+            <div class="modal-body" id="diseaseModalBody">
+                <!-- Filled by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast hidden" id="toast">
+        <div class="toast-content">
+            <i class="toast-icon"></i>
+            <span class="toast-message"></span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+</body>
+</html>
